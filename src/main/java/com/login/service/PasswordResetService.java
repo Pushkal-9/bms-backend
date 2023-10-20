@@ -55,8 +55,20 @@ public class PasswordResetService {
 
     public boolean validateToken(String token) {
         PasswordResetTokenModel resetToken = passwordResetTokenRepository.findByToken(token).orElse(null);
-        return resetToken != null && resetToken.getExpiryDate().isAfter(LocalDateTime.now());
+
+        if (resetToken == null) {
+            LOGGER.warn("Token not found in the database.");
+            return false;
+        }
+
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            LOGGER.warn("Token has expired.");
+            return false;
+        }
+
+        return true;
     }
+
 
     public boolean resetPassword(String token, String newPassword, String confirmPassword) {
         if (!newPassword.equals(confirmPassword)) {

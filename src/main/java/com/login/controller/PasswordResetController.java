@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class PasswordResetController {
@@ -51,21 +52,32 @@ public class PasswordResetController {
     }
 
     @GetMapping("/resetPassword")
-    public String resetPasswordForm(@RequestParam String token, Model model) {
+    public ModelAndView resetPasswordForm(String token) {
+        ModelAndView modelAndView = new ModelAndView();
         boolean isValid = passwordResetService.validateToken(token);
+
         if (isValid) {
             PasswordResetTokenModel tokenModel = passwordResetTokenRepository.findByToken(token).orElse(null);
             if (tokenModel != null) {
-                model.addAttribute("email", tokenModel.getEmail());
                 UsersModel user = usersRepository.findByEmail(tokenModel.getEmail()).orElse(null);
                 if (user != null) {
-                    model.addAttribute("login", user.getLogin());
+                    modelAndView.addObject("login", user.getLogin());
+                    modelAndView.addObject("email", user.getEmail());
+                    modelAndView.addObject("token", token);
+                    modelAndView.setViewName("reset_password");
+                } else {
+                    modelAndView.setViewName("error_page");
+                    // add more error details if necessary
                 }
             }
-            return "reset_password";
+        } else {
+            modelAndView.setViewName("error_page");
+            // add more error details if necessary
         }
-        return "error_page";
+
+        return modelAndView;
     }
+
 
 
     @PostMapping("/doReset")
