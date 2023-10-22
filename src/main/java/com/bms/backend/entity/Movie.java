@@ -49,6 +49,9 @@ public class Movie {
     @Column(name = "release_date", columnDefinition = "DATE", nullable = false)
     private LocalDate releaseDate;
 
+    @Column(name = "image_link")
+    private String imageLink;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;

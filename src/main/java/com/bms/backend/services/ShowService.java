@@ -4,6 +4,7 @@ import com.bms.backend.Repository.ShowsRepository;
 import com.bms.backend.Util.ShowUtil;
 import com.bms.backend.entity.Shows;
 import com.bms.backend.models.PageResponse;
+import com.bms.backend.models.ShowFilterRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,29 +24,12 @@ public class ShowService {
 
     private final ShowsRepository showsRepository;
 
-    public PageResponse<Shows> searchShows(String movieName, String city, LocalDate showDate, LocalDateTime startTime, int pageNo, int limit) {
+    public List<Shows> searchShows(ShowFilterRequest showFilterRequest) {
 
-        log.info("Searching Shows by Params: [showName: " + movieName + ", city: " + city + ", showDate: " + showDate + ", showTime: " + startTime + "]");
+        Specification<Shows> specifications = ShowUtil.createSpecification(showFilterRequest);
 
-        Specification<Shows> specifications = ShowUtil.createSpecification(movieName, city, showDate, startTime);
+        return showsRepository.findAll(specifications);
 
-        Page<Shows> showsPage = showsRepository.findAll(specifications, PageRequest.of(pageNo - 1, limit));
-
-        log.info("Found " + showsPage.getNumberOfElements() + " Shows on Page: " + showsPage.getNumber());
-
-        PageResponse<Shows> pageResponse = new PageResponse<>();
-
-        if (showsPage.hasContent()) {
-            pageResponse.setNumber(pageNo);
-            pageResponse.setRecords(showsPage.getNumberOfElements());
-
-            pageResponse.setTotalPages(showsPage.getTotalPages());
-            pageResponse.setTotalRecords(showsPage.getTotalElements());
-
-            pageResponse.setData(showsPage.getContent());
-        }
-
-        return pageResponse;
     }
 
 }

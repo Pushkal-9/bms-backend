@@ -1,0 +1,1 @@
+ALTER TABLE movie ADD image_link VARCHAR(255);

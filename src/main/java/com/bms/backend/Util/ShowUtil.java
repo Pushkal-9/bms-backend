@@ -6,7 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.bms.backend.entity.Movie;
+import com.bms.backend.entity.Seat;
 import com.bms.backend.entity.Shows;
+import com.bms.backend.entity.Theatre;
+import com.bms.backend.models.ShowFilterRequest;
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 import lombok.experimental.UtilityClass;
@@ -14,27 +19,51 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class ShowUtil {
 
-    public static Specification<Shows> createSpecification(String movieName, String city, LocalDate showDate, LocalDateTime startTime) {
+    public static Specification<Shows> createSpecification(ShowFilterRequest showFilterRequest) {
 
         List<Specification<Shows>> specifications = new ArrayList<>();
 
         specifications.add(getCurrentAndFutureShowSpec());
-//
-//        if (StringUtils.isNotBlank(movieName)) {
-//            specifications.add(getShowByMovieNameSpec(movieName));
-//        }
-//
-//        if (StringUtils.isNotBlank(city)) {
-//            specifications.add(getShowByCitySpec(city));
-//        }
 
-        if (Objects.nonNull(showDate)) {
-            specifications.add(getShowByDateSpec(showDate));
+        if (Objects.nonNull(showFilterRequest.getMovieId())) {
+            specifications.add(getShowByMovieNameSpec(showFilterRequest.getMovieId()));
         }
 
-        if (Objects.nonNull(startTime)) {
-            specifications.add(getShowByTimeSpec(startTime));
+        if (Objects.nonNull(showFilterRequest.getCityId())) {
+            specifications.add(getShowByCitySpec(showFilterRequest.getCityId()));
         }
+
+        if (Objects.nonNull(showFilterRequest.getShowDate())) {
+            specifications.add(getShowByDateSpec(showFilterRequest.getShowDate()));
+        }
+
+        if (Objects.nonNull(showFilterRequest.getStartTime())) {
+            specifications.add(getShowByAfterTimeSpec(showFilterRequest.getStartTime()));
+        }
+
+        if (Objects.nonNull(showFilterRequest.getEndTime())) {
+            specifications.add(getShowByBeforeTimeSpec(showFilterRequest.getEndTime()));
+        }
+
+        if (Objects.nonNull(showFilterRequest.getMinRate())) {
+            specifications.add(getShowByMinRateSpec(showFilterRequest.getMinRate()));
+        }
+
+        if (Objects.nonNull(showFilterRequest.getMaxRate())) {
+            specifications.add(getShowByMaxRateSpec(showFilterRequest.getMaxRate()));
+        }
+
+        return createSpecification(specifications);
+
+    }
+
+    public static Specification<Shows> rate(long min, long max) {
+
+        List<Specification<Shows>> specifications = new ArrayList<>();
+
+        specifications.add(getShowByMinRateSpec(min));
+        specifications.add(getShowByMaxRateSpec(max));
+
 
         return createSpecification(specifications);
 
@@ -52,29 +81,53 @@ public class ShowUtil {
     }
 
     private static Specification<Shows> getCurrentAndFutureShowSpec() {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("start_time"), LocalDate.now());
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("startTime"), LocalDate.now());
     }
 
-//    private static Specification<Show> getShowByMovieNameSpec(String movieName) {
-//        return (root, query, criteriaBuilder) -> {
-//            Join<Show, Movie> movieJoin = (Join<Show, Movie>) root.join("movie");
-//            return criteriaBuilder.equal((Expression<?>) movieJoin.get("name"), movieName);
-//        };
-//    }
-//
-//    private static Specification<Show> getShowByCitySpec(String city) {
-//        return (root, query, criteriaBuilder) -> {
-//            Join<Show, Theatre> theaterJoin = root.join("theatre");
-//            return criteriaBuilder.equal(theaterJoin.get("city"), city);
-//        };
-//    }
+    private static Specification<Shows> getShowByMovieNameSpec(long movieId) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Shows, Movie> movieJoin = root.join("movie");
+            return criteriaBuilder.equal( movieJoin.get("id"), movieId);
+        };
+    }
+
+    private static Specification<Shows> getShowByCitySpec(long cityId) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Shows, Theatre> theaterJoin = root.join("theatre");
+            return criteriaBuilder.equal(theaterJoin.get("cityId"), cityId);
+        };
+    }
+
+    private static Specification<Shows> getShowByMinRateSpec(long rate) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Shows, Seat> theaterJoin = root.join("seats");
+            return criteriaBuilder.greaterThanOrEqualTo(theaterJoin.get("rate"), rate);
+        };
+    }
+
+    private static Specification<Shows> getShowByMaxRateSpec(long rate) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Shows, Seat> theaterJoin = root.join("seats");
+            return criteriaBuilder.lessThanOrEqualTo(theaterJoin.get("rate"), rate);
+        };
+    }
 
     private static Specification<Shows> getShowByDateSpec(LocalDate date) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("date"), date);
     }
 
     private static Specification<Shows> getShowByTimeSpec(LocalDateTime startTime) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("start_time"), startTime);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("startTime"), startTime);
     }
+
+    private static Specification<Shows> getShowByAfterTimeSpec(LocalDateTime startTime) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("startTime"), startTime);
+    }
+
+    private static Specification<Shows> getShowByBeforeTimeSpec(LocalDateTime endTime) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), endTime);
+    }
+
+
 
 }

@@ -5,15 +5,20 @@ import com.bms.backend.Repository.TheatreRepository;
 import com.bms.backend.entity.Movie;
 import com.bms.backend.entity.Shows;
 import com.bms.backend.entity.Theatre;
+import com.bms.backend.models.ShowFilterRequest;
 import com.bms.backend.services.CityService;
 import com.bms.backend.entity.City;
 import com.bms.backend.services.MovieService;
+import com.bms.backend.services.ShowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +31,7 @@ public class SearchController {
     private final MovieService movieService;
     private final ShowsRepository showsRepository;
     private final TheatreRepository theatreRepository;
+    private final ShowService showService;
 
     @GetMapping("/search/city")
     public List<City> getCityList(){
@@ -46,6 +52,12 @@ public class SearchController {
             shows.addAll(showsRepository.findAllByMovieIdAndTheatreId(movieId,theatre.getId()));
         }
         return shows;
+    }
+
+    @GetMapping("/search/show")
+    public List<Shows> getShowCList(@RequestBody ShowFilterRequest showFilterRequest){
+
+        return showService.searchShows(showFilterRequest);
     }
 
 
