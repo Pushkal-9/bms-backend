@@ -71,3 +71,20 @@ CREATE TABLE `seat` (
                                  PRIMARY KEY (`id`),
                                  FOREIGN KEY (`show_id`) REFERENCES `shows` (`id`)
 );
+
+-- For users
+-- Create the users_table
+CREATE TABLE users_table (
+                             id INT AUTO_INCREMENT PRIMARY KEY,
+                             login VARCHAR(255) NOT NULL,
+                             password VARCHAR(255) NOT NULL,
+                             email VARCHAR(255) NOT NULL
+);
+
+-- Create the password_reset_tokens table
+CREATE TABLE password_reset_tokens (
+                                       id INT AUTO_INCREMENT PRIMARY KEY,
+                                       email VARCHAR(255) NOT NULL,
+                                       token VARCHAR(255) NOT NULL,
+                                       expiry_date TIMESTAMP NOT NULL
+);
