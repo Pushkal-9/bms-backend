@@ -20,6 +20,17 @@ spring:
             clientId: 418240257442-jtog1e4rva4fd6dd6dca84kjrrb5f0dl.apps.googleusercontent.com
             clientSecret: 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
             scope: profile, email
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: movieradar69@gmail.com
+    password: abxm achb odbq zpaw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 app:
   jwt:
