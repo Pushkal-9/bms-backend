@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MovieRadar : Booking Confirmation</title>
+</head>
+<body>
+<h3>Thanks for making a booking with MovieRadar. Please find your booking details below :</h3>
+<p>
+    <strong>Movie:</strong> [[${bookingDetails.movieName}]]<br>
+    <strong>City:</strong> [[${bookingDetails.city}]]<br>
+    <strong>Theatre:</strong> [[${bookingDetails.theatre}]]<br>
+    <strong>Screen:</strong> [[${bookingDetails.screen}]]<br>
+    <strong>Amount:</strong> $ [[${bookingDetails.amount}]]<br>
+    <strong>Booking Email:</strong> [[${bookingDetails.email}]]<br>
+    <strong>Show Date:</strong> [[${bookingDetails.showDate}]]<br>
+    <strong>Time:</strong> [[${bookingDetails.showTime}]]<br>
+    <strong>Seats:</strong> [[${bookingDetails.seatData}]]<br>
+    <strong> </strong> <br>
+    <strong>Please Scan the below QR Code at the time of entry. </strong> <br>
+    <img src="[[${bookingDetails.QRImageUrl}]]" alt="QR Code" th:src="${bookingDetails.QRImageUrl}"
+         srcset="[[${bookingDetails.QRImageUrl}]] 1x, [[${bookingDetails.QRImageUrl}@2x]] 2x"
+         sizes="(max-width: 600px) 100vw, 50vw" />
+</p>
+</body>
+</html>

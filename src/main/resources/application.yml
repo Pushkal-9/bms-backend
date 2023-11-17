@@ -53,3 +53,9 @@ flyway:
   schemas: bms_schema
   user: admin
   password: movie-radar
+stripe:
+  secret:
+    key: sk_test_51O5FGvI3Mt11ZlbtmkLpcn6wuMQQoXa7CNZMQfQRYjvPcK5OHWU4OgSp5FVJzVHqCTfa59CzhdzZfTb8wqpm7V8600ziK6abTv
+aws:
+  accessKey: AKIASWWB4JXFRZLRUBWA
+  secretKey: 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
