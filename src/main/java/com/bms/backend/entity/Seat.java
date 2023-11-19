@@ -21,10 +21,10 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "row_number")
+    @Column(name = "r_number")
     private String rowNumber;
 
-    @Column(name = "column_number")
+    @Column(name = "c_number")
     private String columnNumber;
 
     @Column(name = "rate")
@@ -32,6 +32,9 @@ public class Seat {
 
     @Column(name = "available")
     private boolean available;
+
+    @Column(name = "blocked")
+    private boolean blocked;
 
     @Column(name = "booked_at")
     private LocalDateTime bookedAt;
@@ -48,4 +51,7 @@ public class Seat {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "blocked_at")
+    private LocalDateTime blockedAt;
 }
