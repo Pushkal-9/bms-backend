@@ -21,9 +21,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final CustomOAuth2UserService customOauth2UserService;
@@ -39,16 +39,17 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/welcome/**", "/auth/**", "/oauth2/**","/search/**","/users/**","/booking/**").permitAll()
+                        .requestMatchers("/welcome/**", "/auth/**", "/oauth2/**", "/search/**", "/users/**", "/booking/**").permitAll()
                         .requestMatchers("/", "/error", "/csrf", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll() // Permitting WebSocket connections
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2Login -> oauth2Login
                         .userInfoEndpoint().userService(customOauth2UserService)
                         .and()
                         .successHandler(customAuthenticationSuccessHandler))
-                .logout(l -> l.logoutSuccessUrl("/").permitAll())
+                .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
