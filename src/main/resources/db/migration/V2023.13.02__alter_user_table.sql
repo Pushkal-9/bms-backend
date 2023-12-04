@@ -1,0 +1,8 @@
+ALTER TABLE users
+    ADD COLUMN userType VARCHAR(20) DEFAULT 'CUSTOMER';
+
+ALTER TABLE users
+    ADD COLUMN membershipType VARCHAR(20) DEFAULT 'BASIC';
+
+ALTER TABLE users
+    ADD COLUMN favoriteGenres TEXT;
