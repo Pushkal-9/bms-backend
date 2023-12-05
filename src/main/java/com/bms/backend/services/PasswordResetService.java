@@ -30,7 +30,7 @@ public class PasswordResetService {
     @Autowired
     private JavaMailSender emailSender;
 
-    @Value("${app.client.baseUrl:http://localhost:3000}")
+    @Value("${app.client.baseUrl:https://movie-radar-frontend.vercel.app}")
     private String clientBaseUrl;
 
     public boolean sendPasswordResetLink(String email) {

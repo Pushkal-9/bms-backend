@@ -32,7 +32,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookingService {
 
-    @Value("${app.baseurl:http://localhost:3000}")
+    @Value("${app.baseurl:https://movie-radar-frontend.vercel.app}")
     private String clientBaseURL;
     private final BookingRepository bookingRepository;
     private final StripeCheckoutService stripeCheckoutService;

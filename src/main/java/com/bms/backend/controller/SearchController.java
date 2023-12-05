@@ -7,6 +7,7 @@ import com.bms.backend.entity.*;
 import com.bms.backend.models.ShowFilterRequest;
 import com.bms.backend.services.CityService;
 import com.bms.backend.services.MovieService;
+import com.bms.backend.services.ScreenService;
 import com.bms.backend.services.ShowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class SearchController {
     private final TheatreRepository theatreRepository;
     private final ShowService showService;
     private final SeatRepository seatRepository;
+    private final ScreenService screenService;
 
     @GetMapping("/search/city")
     public List<City> getCityList(){
@@ -40,6 +42,17 @@ public class SearchController {
         return movieService.getAllMoviesByCity(cityId);
     }
 
+
+    @GetMapping("/search/all/movies")
+    public List<Movie> getMovieList(){
+        return movieService.getAllMovies();
+    }
+
+    @GetMapping("/search/screen")
+    public List<Screen> getScreensByTheatre(@RequestParam("theatre_id") long theatreId){
+        return screenService.findScreensByTheatre(theatreId);
+    }
+
     @GetMapping("/search/shows")
     public List<Shows> getShowList(@RequestParam("city_id") long cityId,@RequestParam("movie_id") long movieId){
         log.info("city : {}", cityId);
@@ -49,6 +62,12 @@ public class SearchController {
             shows.addAll(showsRepository.findAllByMovieIdAndTheatreId(movieId,theatre.getId()));
         }
         return shows;
+    }
+
+
+    @GetMapping("/search/theatre")
+    public List<Theatre> getShowList(@RequestParam("city_id") long cityId){
+        return theatreRepository.findAllByCityId(cityId);
     }
 
     @PostMapping("/search/show")

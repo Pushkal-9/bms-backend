@@ -19,7 +19,7 @@ public class StripeCheckoutService {
     @Value("${stripe.secret.key}")
     private String stripeSecretKey;
 
-    @Value("${app.baseurl:http://localhost:3000}")
+    @Value("${app.client.baseUrl:https://movie-radar-frontend.vercel.app}")
     private String clientBaseURL;
 
     private final SeatRepository seatRepository;
