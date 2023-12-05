@@ -1,5 +1,8 @@
 package com.bms.backend.entity;
 
+import com.bms.backend.commons.Genre;
+import com.bms.backend.commons.MembershipType;
+import com.bms.backend.commons.UserType;
 import com.bms.backend.security.oauth2.OAuth2Provider;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,10 +12,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -37,14 +44,12 @@ public class User {
 
     private String providerId;
 
-    public User(String username, String password, String name, String email, String role, String imageUrl, OAuth2Provider provider, String providerId) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-        this.role = role;
-        this.imageUrl = imageUrl;
-        this.provider = provider;
-        this.providerId = providerId;
-    }
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
+    @Enumerated(EnumType.STRING)
+    private MembershipType membershipType;
+
+    private String favoriteGenres;
+
 }

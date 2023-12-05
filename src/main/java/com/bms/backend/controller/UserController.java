@@ -1,6 +1,9 @@
 package com.bms.backend.controller;
 
+import com.bms.backend.dto.UserDetailsResponse;
+import com.bms.backend.dto.UserDetailsUpdateRequest;
 import com.bms.backend.dto.UserDto;
+import com.bms.backend.dto.UserPaymentMethodDetailsResponse;
 import com.bms.backend.entity.User;
 import com.bms.backend.mapper.UserMapper;
 import com.bms.backend.security.CustomUserDetails;
@@ -9,13 +12,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.bms.backend.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
@@ -57,4 +57,26 @@ public class UserController {
         userService.deleteUser(user);
         return userMapper.toUserDto(user);
     }
+
+    @PostMapping("/update")
+    public UserDetailsResponse updateUser(@RequestBody UserDetailsUpdateRequest userDetailsUpdateRequest) {
+        return userService.updateUserDetails(userDetailsUpdateRequest);
+    }
+
+    @GetMapping("/{userId}/details")
+    public UserDetailsResponse getUserDetails(@PathVariable Long userId) {
+        return userService.getUserDetails(userId);
+    }
+
+    @GetMapping("email/{email}/details")
+    public UserDetailsResponse getUserDetailsByEmail(@PathVariable String email) {
+        Optional<User> userOptional = userService.getUserByEmail(email);
+        return userOptional.map(user -> userService.getUserDetails(user.getId())).orElse(null);
+    }
+
+    @GetMapping("/{userId}/payment-details")
+    public UserPaymentMethodDetailsResponse getSavedPaymentDetails(@PathVariable Long userId) {
+        return userService.getPaymentMethodDetails(userId);
+    }
+
 }
