@@ -5,26 +5,25 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://movie-radar1.cwzyhkblrjvq.us-east-2.rds.amazonaws.com:3306/bms_backend?zeroDateTimeBehavior=convertToNull
-    username: admin
-    password: movie-radar
-  security:
+    url: 
+    username: 
+    password: 
     oauth2:
       client:
         registration:
           github:
-            clientId: 00db2c21b7fa7b03e8f9
-            clientSecret: d058107f6e42c3e25b715f78c63b90f2f189febc
+            clientId: 
+            clientSecret: 
             scope: read:user, user:email
           google:
-            clientId: 418240257442-jtog1e4rva4fd6dd6dca84kjrrb5f0dl.apps.googleusercontent.com
-            clientSecret: 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
+            clientId: 
+            clientSecret: 
             scope: profile, email
   mail:
     host: smtp.gmail.com
     port: 587
-    username: movieradar69@gmail.com
-    password: abxm achb odbq zpaw
+    username: 
+    password: 
     properties:
       mail:
         smtp:
@@ -50,13 +49,13 @@ logging:
   level:
     org.springframework.security: DEBUG
 flyway:
-  url: jdbc:mysql://movie-radar1.cwzyhkblrjvq.us-east-2.rds.amazonaws.com:3306/bms_backend
+  url: 
   schemas: bms_schema
-  user: admin
-  password: movie-radar
+  user: 
+  password: 
 stripe:
   secret:
-    key: sk_test_51O5FGvI3Mt11ZlbtmkLpcn6wuMQQoXa7CNZMQfQRYjvPcK5OHWU4OgSp5FVJzVHqCTfa59CzhdzZfTb8wqpm7V8600ziK6abTv
+    key: 
 aws:
-  accessKey: AKIASWWB4JXFRZLRUBWA
-  secretKey: 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
+  accessKey: 
+  secretKey: 
